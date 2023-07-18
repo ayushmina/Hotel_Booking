@@ -5,15 +5,7 @@ function mongoConnect() {
     const url = config.get("db.databaseUrl")
     console.log("Url mongo:", url)
     mongoose.connect(
-      url,
-      { useUnifiedTopology: true, useNewUrlParser: true },
-      (error) => {
-        if(error==null){
-          console.log("connection successfully DB")
-        }else{
-        console.log("connection error", error)
-        }
-      }
+      url,{ useUnifiedTopology: true, useNewUrlParser: true }
     )
   } catch (error) {
     console.log(error)

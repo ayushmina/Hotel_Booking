@@ -1,5 +1,5 @@
 {
     "db":{
-        "databaseUrl":"here is mongo databaseUrl"
+        "databaseUrl":"mongodb+srv://aayush:ayush@cluster0.rk3ez6o.mongodb.net/?retryWrites=true&w=majority"
     }
   }

@@ -8,48 +8,40 @@ const { model } = require("mongoose");
 let curd = {
 
 
-    addHotel: async function (req, res) {
+    createRoom: async function (req, res) {
         try {
 
             const schema = Joi.object().keys({
-                name: Joi.string().trim().required(),
-                type: Joi.string().trim().required(),
-                city: Joi.string().trim().required(),
-                address: Joi.string().trim().required(),
-                distance: Joi.string().trim().required(),
-                photos: Joi.array().trim().required(),
                 title: Joi.string().trim().required(),
+                price: Joi.number().trim().required(),
+                maxPeople: Joi.number().trim().required(),
                 desc: Joi.string().trim().required(),
-                rating: Joi.number().required(),
-                rooms: Joi.array().trim().required(),
-                cheapestPrice: Joi.number().trim().required(),
-                featured: Joi.bool().trim().required(),
-
+                roomNumbers: Joi.number().trim().required()
             })
-
+            const hotelId = req.params.hotelid;
+            
             await universalFunctions.validateRequestPayload(req.body, res, schema)
 
-            let hotel = await models.Hotel.find(req.body);
-            if (!category) {
+            let  newRoom = await models.Room.create(req.body);
+            
+            let room =await models.Hotel.findByIdAndUpdate(hotelId, {
+                $push: { rooms: newRoom._id },
+              });
+              if(!room){
+                await models.Room.findByIdAndDelete(newRoom._id);
                 return universalFunctions.sendError(
                     {
                         statusCode: 400,
-                        message: "hotel already added in system add other category",
+                        message: "hotel is not found",
                     },
                     res
-                )
-            }
-
-            hotel = await models.Hotel.create(req.body);
-
-
-
+                )}
 
             return universalFunctions.sendSuccess(
                 {
                     statusCode: 200,
-                    message: "category add Successfull",
-                    data: hotel,
+                    message: "room add Successfull",
+                    data: newRoom,
                 },
                 res
             )
@@ -61,7 +53,7 @@ let curd = {
     getHotelById: async function (req, res) {
         try {
 
-            let hotel = await models.Hotel.findOne({ _id: req.params.id });
+            let hotel = await models.Room.findOne({ _id: req.params.id });
             if (!hotel) {
                 return universalFunctions.sendError(
                     {
@@ -88,11 +80,7 @@ let curd = {
     getHotels: async function (req, res) {
         try {
 
-           const { min, max, ...others } = req.query;
-           let hotels = await models.Hotel.find({
-                ...others,
-                cheapestPrice: { $gt: min | 1, $lt: max || 999 },
-              }).limit(req.query.limit);
+           let hotels = await models.Hotel.find()
                 
             return universalFunctions.sendSuccess(
                 {
@@ -107,13 +95,13 @@ let curd = {
             return universalFunctions.sendError(error, res)
         }
     },
-    updateHotel: async function (req, res) {
+    updateRoom: async function (req, res) {
         try {
 
 
-            let hotel = await models.Hotel.find({ _id: req.params.id });
+            let room = await models.Room.find({ _id: req.params.id });
 
-            if (!hotel) {
+            if (!room) {
                 return universalFunctions.sendError(
                     {
                         statusCode: 400,
@@ -122,7 +110,7 @@ let curd = {
                     res
                 )}
 
-            hotel = await models.Hotel.findByIdAndUpdate(
+            hotel = await models.Room.findByIdAndUpdate(
                 req.params.id,
                 { $set: req.body },
                 { new: true }
@@ -130,7 +118,7 @@ let curd = {
             return universalFunctions.sendSuccess(
                 {
                     statusCode: 200,
-                    message: "hotel is update Successfull",
+                    message: "room is update Successfull",
                     data: hotel,
                 },
                 res
@@ -144,23 +132,23 @@ let curd = {
         try {
 
 
-            let hotel = await models.Hotel.find({ _id: req.params.id });
+            let room = await models.Room.find({ _id: req.params.id });
 
-            if (!hotel) {
+            if (!room) {
                 return universalFunctions.sendError(
                     {
                         statusCode: 400,
-                        message: "hotel not present in system ",
+                        message: "room not present in system ",
                     },
                     res
                 )}
 
-                await models.Hotel.findByIdAndDelete(req.params.id);
+                await models.Room.findByIdAndDelete(req.params.id);
             return universalFunctions.sendSuccess(
                 {
                     statusCode: 200,
-                    message: "hotel is delete Successfull",
-                    data: hotel,
+                    message: "room is delete Successfull",
+                    data: room,
                 },
                 res
             )
@@ -169,20 +157,22 @@ let curd = {
             return universalFunctions.sendError(error, res)
         }
     },
-    countByType: async function (req, res) {
+    updateRoomAvailability: async function (req, res) {
         try {
 
-            let types= ["hotel","apartment","resort","villa","cabin" ]
-            const list = await Promise.all(
-                types.map((type) => {
-                  return models.Hotel.countDocuments({ type: type });
-                })
+            await Room.updateOne(
+                { "roomNumbers._id": req.params.id },
+                {
+                  $push: {
+                    "roomNumbers.$.unavailableDates": req.body.dates
+                  },
+                }
               );
-            return universalFunctions.sendSuccess(
+              return universalFunctions.sendSuccess(
                 {
                     statusCode: 200,
-                    message: "hotel is delete Successfull",
-                    data: list,
+                    message: "unavailableDates",
+                    data: room,
                 },
                 res
             )
@@ -190,7 +180,9 @@ let curd = {
         catch (error) {
             return universalFunctions.sendError(error, res)
         }
-    }
+    },
+    
+
 }
 
 module.exports = curd;

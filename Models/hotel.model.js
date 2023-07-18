@@ -1,5 +1,8 @@
-import mongoose from "mongoose";
-const HotelSchema = new mongoose.Schema({
+const Mongoose = require("mongoose")
+const crypto = require("crypto")
+const { number } = require("joi")
+
+const HotelSchema = new Mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -36,9 +39,10 @@ const HotelSchema = new mongoose.Schema({
     min: 0,
     max: 5,
   },
-  rooms: {
-    type: [String],
-  },
+  rooms: [{
+    type: Mongoose.Schema.Types.ObjectId,
+    ref:"room",
+}],
   cheapestPrice: {
     type: Number,
     required: true,
@@ -49,4 +53,4 @@ const HotelSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Hotel", HotelSchema)
+module.exports = Mongoose.model("Hotel", HotelSchema)

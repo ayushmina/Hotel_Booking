@@ -1,43 +1,49 @@
 const Mongoose = require("mongoose")
 const crypto = require("crypto")
 const { number } = require("joi")
-const Schema = Mongoose.Schema
-const userDataSchema = new Schema(
+
+const UserSchema = new Mongoose.Schema(
   {
-    firstName: {
+    username: {
       type: String,
-    },
-    lastName: {
-      type: String,
-    },
-    phoneNumber: {
-      type: String,
-    },
-    countryCode: {
-      type: String,
+      required: true,
     },
     email: {
       type: String,
+      required: true,
+    
+    },
+    country: {
+      type: String,
+     
+    },
+    img: {
+      type: String,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
     },
     password: {
       type: String,
-      trim: true,
+      required: true,
     },
-    deviceToken: {
-      type: String,
-    },
-  
- 
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    }, 
     salt: {
-      type: String,
-    },
-
+        type: String,
+      },
+  
   },
-
   { timestamps: true }
-)
-
-userDataSchema.pre("save", function (next) {
+);
+UserSchema.pre("save", function (next) {
   if (this.password && this.password.length > 0) {
     this.salt = new Buffer(crypto.randomBytes(16).toString("base64"), "base64")
     this.password = this.hashPassword(this.password)
@@ -45,7 +51,7 @@ userDataSchema.pre("save", function (next) {
   next()
 })
 
-userDataSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = function (password) {
   if (this.salt && password) {
     return crypto
       .pbkdf2Sync(password, this.salt, 10000, 64, "sha512")
@@ -56,9 +62,9 @@ userDataSchema.methods.hashPassword = function (password) {
   }
 }
 
-userDataSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = function (password) {
   console.log("password", this.password === this.hashPassword(password))
 
   return this.password === this.hashPassword(password)
 }
-module.exports = Mongoose.model("user", userDataSchema)
+module.exports = Mongoose.model("user", UserSchema)
