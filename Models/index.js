@@ -1,6 +1,9 @@
-const userSchema              = require("./userData.models");
+const userSchema              = require("./users.model");
+const Hotel              = require("./hotel.model");
+
 
 
 module.exports = {
-    userSchema
+    userSchema,
+    Hotel,
 }
