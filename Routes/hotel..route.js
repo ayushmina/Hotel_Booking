@@ -12,8 +12,4 @@ router.route("/countByType").get(checkAuth,hotelController.countByType);
 router.route("/deleteHotel").post(checkAuth,hotelController.deleteHotel);
 
 
-
-
-
-
 module.exports = router;

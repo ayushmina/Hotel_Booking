@@ -50,7 +50,7 @@ let curd = {
             return universalFunctions.sendError(error, res)
         }
     },
-    getHotelById: async function (req, res) {
+    getRoomById: async function (req, res) {
         try {
 
             let hotel = await models.Room.findOne({ _id: req.params.id });
@@ -128,7 +128,7 @@ let curd = {
             return universalFunctions.sendError(error, res)
         }
     },
-    deleteHotel: async function (req, res) {
+    deleteRoom : async function (req, res) {
         try {
 
 
