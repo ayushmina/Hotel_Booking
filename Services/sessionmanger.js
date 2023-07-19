@@ -1,8 +1,8 @@
 const Jwt               = require("jsonwebtoken");
 const Config            =require("config");
-const responseMessage   =require("../../resources/response.json");
+const responseMessage   =require("../resources/response.json");
 const Boom              =require("boom");
-c
+
 
 const createToken = async (payloadData, time) => {
   
@@ -38,8 +38,7 @@ const createaccessToken = async (tokenData, expireTime=1440) => {
 
 
 module.exports = {
-  sessionManager,
-  destroySession,
+
   createaccessToken
   
 };

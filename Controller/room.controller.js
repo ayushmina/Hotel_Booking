@@ -1,8 +1,7 @@
 let universalFunctions = require("../utils/universalFunctions");
 let Joi = require("joi");
 let models = require("../Models/index");
-const { ObjectId } = require('mongodb');
-const { model } = require("mongoose");
+
 
 
 let curd = {

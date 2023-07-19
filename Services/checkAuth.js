@@ -1,13 +1,12 @@
 
 const Jwt                = require("jsonwebtoken");
 const Boom               =require("boom");
-let universalFunctions   = require("../../utils/universalFunctions");
-let  models=require("../../Models/index");
+let universalFunctions   = require("../utils/universalFunctions");
+let  models=require("../Models/index");
 const checkAuth =  async(req, res, next) => {
     // const token = req.headers["x-access-token"] || req.query["x-access-token"] || req.headers["token"];
     // console.log("token:",token);
-    let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDViNmZiNDJhZDYyNTZkOWFlZTM0ZTYiLCJpYXQiOjE2ODM3MTM5NzJ9.2ogtd8Et1tgL4l1jwnumJyNxRizYmcqeMzddOIy6SOk"
-
+    let token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGI3NzY3NjliOGVmZjg0NTc0NWMwMjIiLCJpYXQiOjE2ODk3NDUwMTV9.p-3jsG2dHIhzrltIX2nvJQ3JxN-6s_BrV3NCNBxCUyQ"
       if (token) {
         // let decoded = jwt_decode(token);
         Jwt.verify(token,"secretKey", async function (err, decoded) {

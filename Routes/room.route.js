@@ -1,16 +1,16 @@
 const router = require("express").Router();
 // const { route } = require(".");
-const checkAuth=require("../services/authServices/checkAuth");
+const checkAuth=require("../services/checkAuth");
 // Controllers
 const roomController=require("../Controller/room.controller")
 // website pannel
 
-router.route("/addHotel").post(checkAuth,roomController);
-router.route("/getHotels").get(checkAuth,roomController);
-router.route("/updateHotel").post(checkAuth,roomController);
-router.route("/getHotelById").get(checkAuth,roomController);
-router.route("/countByType").get(checkAuth,roomController);
-router.route("/deleteHotel").post(checkAuth,roomController);
+router.route("/createRoom").post(checkAuth,roomController.createRoom);
+router.route("/deleteRoom").post(checkAuth,roomController.deleteRoom);
+router.route("/getHotels").get(roomController.getHotels);
+router.route("/getRoomById").get(roomController.getRoomById);
+router.route("/updateRoom").post(checkAuth,roomController.updateRoom);
+router.route("/updateRoomAvailability").post(checkAuth,roomController.updateRoomAvailability);
 
 
 
